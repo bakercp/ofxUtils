@@ -20,7 +20,6 @@ public:
     //bool    hasLike(T item) const;
     //bool    replaceAll(T item, T with);
     
-    
     bool    has(T item) const;
     bool    add(T item);
     bool    remove(T item);
@@ -30,6 +29,7 @@ public:
     size_t size() const;
     bool   isEmpty() const;
     vector<T> toArray() const;
+    vector<T> toArrayReverse() const;
     set<T>& getItems();
     void clear();
     
@@ -58,7 +58,14 @@ template <class T> typename set<T>::iterator ofxSimpleSet<T>::end() const {retur
 
 template <class T> size_t ofxSimpleSet<T>::size() const { return items.size();}
 template <class T> bool ofxSimpleSet<T>::isEmpty() const { return items.size() <= 0;}
-template <class T> vector<T> ofxSimpleSet<T>::toArray() const {return std::vector<T>(items.begin(), items.end());}
+template <class T> vector<T> ofxSimpleSet<T>::toArray() const {
+    return std::vector<T>(items.begin(), items.end());
+}
+template <class T> vector<T> ofxSimpleSet<T>::toArrayReverse() const {
+    std::vector<T> array(items.begin(), items.end());
+    std::reverse(array.begin(),array.end());
+    return array;
+}
 template <class T> set<T>& ofxSimpleSet<T>::getItems() {return items;}
 template <class T> void ofxSimpleSet<T>::clear() {items.clear();}
 
