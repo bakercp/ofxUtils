@@ -351,7 +351,6 @@ double ofxDataBuffer_<T>::getPopulationStdDev(){
     return stdDevPopulation;
 }
 
-
 typedef ofxDataBuffer_<char>   ofxCharDataBuffer;
 typedef ofxDataBuffer_<float>  ofxFloatDataBuffer;
 typedef ofxDataBuffer_<float>  ofxDataBuffer;
