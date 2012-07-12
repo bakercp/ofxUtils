@@ -12,6 +12,9 @@
 #include <set>
 #include <vector>
 
+#include "Poco/RegularExpression.h"
+using Poco::RegularExpression;
+
 template <typename T> class ofxSimpleSet {
 public:
     ofxSimpleSet();
@@ -74,5 +77,29 @@ typedef ofxSimpleSet<int>    ofxSimpleIntSet;
 typedef ofxSimpleSet<float>  ofxSimpleFloatSet;
 typedef ofxSimpleSet<string> ofxSimpleStringSet;
 
+inline vector<string> ofxSimpleStringSetFindLike(const ofxSimpleSet<string>& theSet, string regex, bool ignoreCase = false) {
+    RegularExpression re(regex, ignoreCase ? RegularExpression::RE_CASELESS : 0);
+    vector<string> results;
+    set<string>::iterator iter = theSet.begin();
+    while(iter != theSet.end()) {
+        if(re.match(*iter)) {
+            results.push_back(*iter);
+        }
+        iter++;
+    }
+    return results;
+}
 
+inline bool ofxSimpleStringSetHasLike(const ofxSimpleSet<string>& theSet, string regex, bool ignoreCase = false) {
+    RegularExpression re(regex, ignoreCase ? RegularExpression::RE_CASELESS : 0);
+    vector<string> results;
+    set<string>::iterator iter = theSet.begin();
+    while(iter != theSet.end()) {
+        if(re.match(*iter)) {
+            return true;
+        }
+        iter++;
+    }
+    return false;
+}
 
