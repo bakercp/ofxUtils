@@ -33,7 +33,7 @@ public:
 	virtual ~ofxEnablerInterface() {};
 	
 	bool isEnabled() {
-		return enabled;
+		return bEnabled;
 	}
 	
     void enable() {
@@ -46,9 +46,9 @@ public:
 
     
     void toggleEnabled() {
-        enabled = !enabled;
+        bEnabled = !bEnabled;
         // call the events if needed
-        if(enabled) {
+        if(bEnabled) {
             onEnabled();
         } else {
             onDisabled();
@@ -56,10 +56,10 @@ public:
     }
     
 	void setEnabled(bool _enabled) { 
-		if(_enabled != enabled) {
-			enabled = _enabled;
+		if(_enabled != bEnabled) {
+			bEnabled = _enabled;
 			// call the events if needed
-			if(enabled) {
+			if(bEnabled) {
 				onEnabled();
 			} else {
 				onDisabled();
@@ -73,7 +73,7 @@ public:
 
 private:
 	// not protected, so changes only via getters/setters.
-	bool enabled;
+	bool bEnabled;
 	
 };
 
