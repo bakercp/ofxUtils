@@ -50,13 +50,13 @@ public:
 	 
 	~ofxClampedPoint() {}
 	
-	ofPoint getClamped() {
+	ofPoint getClamped() const {
 		return ofPoint(getClampedX(), getClampedY(), getClampedZ());
 	}
     
-	float getClampedX() {return ofClamp(x,minLimit.x,maxLimit.x);}
-	float getClampedY() {return ofClamp(y,minLimit.y,maxLimit.y);}
-	float getClampedZ() {return ofClamp(z,minLimit.z,maxLimit.z);}
+	float getClampedX() const {return ofClamp(x,minLimit.x,maxLimit.x);}
+	float getClampedY() const {return ofClamp(y,minLimit.y,maxLimit.y);}
+	float getClampedZ() const {return ofClamp(z,minLimit.z,maxLimit.z);}
 
 	void setMinLimits(const ofPoint& pnt) {
         setMinX(pnt.x);
@@ -125,7 +125,7 @@ public:
 	
 protected:
 	
-    bool areSame(float a, float b) {
+    bool areSame(float a, float b) const {
         return std::fabs(a - b) < std::numeric_limits<float>::epsilon();
     }
     
