@@ -77,10 +77,10 @@ inline void ofxAdd(vector<T>& values, const T& target) {
     values.push_back(target);
 }
 
-// special to avoid string literal problems
-inline void ofxAdd(vector<string>& values, const string& target) {
-    values.push_back(target);
-}
+//// special to avoid string literal problems
+//inline void ofxAdd(vector<string>& values, const string& target) {
+//    values.push_back(target);
+//}
 
 
 //--------------------------------------------------------------
@@ -97,21 +97,25 @@ inline void ofxAdd(vector<string>& values, const string& target) {
 // Remove duplicates and sort the array.
 //--------------------------------------------------------------
 template<class T, class CompareFunction, class EqualityFunction>
-void ofxRemoveDuplicatesAndSort(vector<T>& unsortedValues, CompareFunction compare, EqualityFunction equality) {
+int ofxRemoveDuplicatesAndSort(vector<T>& unsortedValues, CompareFunction compare, EqualityFunction equality) {
     ofSort(unsortedValues, compare); // sort it
-    unsortedValues.erase( std::unique(unsortedValues.begin(), unsortedValues.end(), equality), unsortedValues.end());
+    typename vector<T>::iterator i = std::unique(unsortedValues.begin(), unsortedValues.end(), equality);
+    size_t numRemoved = std::distance(i,unsortedValues.end());
+    unsortedValues.erase(i,unsortedValues.end());
+    return numRemoved;
 }
 
 template<class T>
-void ofxRemoveDuplicatesAndSort(vector<T>& unsortedValues) {
-    ofxRemoveDuplicatesAndSort(unsortedValues, ofxOrderAscending<T>(), ofxIsEqual<T>());
+int ofxRemoveDuplicatesAndSort(vector<T>& unsortedValues) {
+    return ofxRemoveDuplicatesAndSort(unsortedValues, ofxOrderAscending<T>(), ofxIsEqual<T>());
 }
 
 //--------------------------------------------------------------
 // Remove duplicates without altering the order.
 //--------------------------------------------------------------
 template<class T>
-void ofxRemoveDuplicates(vector<T>& unsortedValues) {
+int ofxRemoveDuplicates(vector<T>& unsortedValues) {
+    int numRemoved = 0;
     // perhaps a way to do this using refs w/o copying?
     // http://stackoverflow.com/questions/4877504/how-can-i-remove-duplicate-values-from-a-list-in-c
     typename std::set<T> found;
@@ -119,11 +123,14 @@ void ofxRemoveDuplicates(vector<T>& unsortedValues) {
     for (; i != unsortedValues.end();) {
         if (!found.insert(*i).second) {
             i = unsortedValues.erase(i);
+            numRemoved++;
         }
         else {
             ++i;
         }
     }
+
+    return numRemoved;
 }
 
 
@@ -181,55 +188,102 @@ void ofxIntersection(vector<T>& sortedValues_0, vector<T>& sortedValues_1, vecto
 // Insert in order (like std::multiset)
 //--------------------------------------------------------------
 template<class T, class CompareFunction>
-inline void ofxInsert(vector<T>& sortedValues, const T& value, CompareFunction compare, bool requireUnique = false) {
+inline bool ofxInsert(vector<T>& sortedValues, const T& value, CompareFunction compare, bool requireUnique = false) {
+    bool didInsert = false;
     typename vector<T>::iterator i = std::lower_bound(sortedValues.begin(), sortedValues.end(), value, compare);
-    if (!requireUnique || (i == sortedValues.end() || compare(value, *i))) sortedValues.insert(i, value);    
+    if (!requireUnique || (i == sortedValues.end() || compare(value, *i))) {
+        sortedValues.insert(i, value);
+        didInsert = true;
+    }
+    return didInsert;
 }
 
 template<class T >
-inline void ofxInsert(vector<T>& sortedValues, const T& value) {
-    ofxInsert(sortedValues, value, ofxOrderAscending<T>());
+inline bool ofxInsert(vector<T>& sortedValues, const T& value) {
+    return ofxInsert(sortedValues, value, ofxOrderAscending<T>());
 }
 
 // special to avoid string literal problems
-inline void ofxInsert(vector<string>& sortedValues, const string& value, bool (*compare)(string, string) ) {
-    ofxInsert(sortedValues, value, compare);
-}
+//inline void ofxInsert(vector<string>& sortedValues, const string& value, bool (*compare)(string, string) ) {
+//    ofxInsert(sortedValues, value, compare);
+//}
+//
+//inline void ofxInsert(vector<string>& sortedValues, const string& value) {
+//    ofxInsert(sortedValues, value, ofxOrderAscending<string>());
+//}
 
 //--------------------------------------------------------------
 // Insert unique item in order (like std::set)
 //--------------------------------------------------------------
+
+// special to avoid string literal problems
+//inline void ofxInsertUnique(vector<string>& sortedValues, const string& value, bool (*compare)(string, string)) {
+//    ofxInsert(sortedValues, value, compare);
+//}
+//
+//inline void ofxInsertUnique(vector<string>& sortedValues, const string& value) {
+//    ofxInsert(sortedValues, value, ofxOrderAscending<string>());
+//}
+
 template<class T, class CompareFunction>
-inline void ofxInsertUnique(vector<T>& sortedValues, const T& value, CompareFunction compare) {
-    ofxInsert(sortedValues, value, compare, true);
+inline bool ofxInsertUnique(vector<T>& sortedValues, const T& value, CompareFunction compare) {
+    return ofxInsert(sortedValues, value, compare, true);
 }
 
 template<class T>
-inline void ofxInsertUnique(vector<T>& sortedValues, const T& value) {
-    ofxInsertUnique(sortedValues, value, ofxOrderAscending<T>());
+inline bool ofxInsertUnique(vector<T>& sortedValues, const T& value) {
+    return ofxInsertUnique(sortedValues, value, ofxOrderAscending<T>());
 }
 
-// special to avoid string literal problems
-inline void ofxInsertUnique(vector<string>& sortedValues, const string& value, bool (*compare)(string, string)) {
-    ofxInsert(sortedValues, value, compare);
-}
 
 //--------------------------------------------------------------
 // Does a sorted array contain a value?
 //--------------------------------------------------------------
-template <class T, class CompareFunction>
-inline bool ofxSortedArrayContains(vector<T>& sortedValues, const T& target, CompareFunction compare) {
-    return std::binary_search(sortedValues.begin(), sortedValues.end(), target, compare);
-}
+
+//template <class T, class CompareFunction>
+//inline bool ofxSortedArrayContains(vector<T>& sortedValues, const T& target, CompareFunction compare) {
+//    return std::binary_search(sortedValues.begin(), sortedValues.end(), target, compare);
+//}
 
 template <class T>
 inline bool ofxSortedArrayContains(vector<T>& sortedValues, const T& target) {
-    return ofxSortedArrayContains(sortedValues, target, ofxOrderAscending<T>());
+    return ofContains(sortedValues, target);
+    //return std::binary_search(sortedValues.begin(), sortedValues.end(), target);
+
+//    return ofxSortedArrayContains(sortedValues, target, ofxOrderAscending<T>());
 }
 
-inline bool ofxSortedArrayContains(vector<string>& sortedValues, const string& target, bool (*compare)(string, string)) {
-    return ofxSortedArrayContains(sortedValues, target, compare);
+
+
+
+//inline bool ofxSortedArrayContains(vector<string>& sortedValues, const string& target, bool (*compare)(string, string)) {
+//    return ofxSortedArrayContains(sortedValues, target, compare);
+//}
+//
+//inline bool ofxSortedArrayContains(vector<string>& sortedValues, const string& target) {
+//    return ofxSortedArrayContains(sortedValues, target, ofxOrderAscending<string>());
+//}
+
+
+
+template <class T, class CompareFunction>
+inline bool ofxSortedArrayRemove(vector<T>& sortedValues, const T& target, CompareFunction compare) {
+    bool didRemove = false;
+    typename std::vector<T>::iterator first = std::lower_bound(sortedValues.begin(),sortedValues.end(),target,compare);
+    if(*first == target) {
+        sortedValues.erase(first);
+        didRemove = true;
+    }
+    return didRemove;
 }
+
+template <class T>
+inline bool ofxSortedArrayRemove(vector<T>& sortedValues, const T& target) {
+    return ofxSortedArrayRemove(sortedValues, target, ofxOrderAscending<T>());
+}
+
+
+
 
 //--------------------------------------------------------------
 // Does a sorted array contain a value?
@@ -244,9 +298,14 @@ inline unsigned int ofFindInSorted(const vector<T>& sortedValues, const T& targe
     return ofFindInSorted(sortedValues, target, ofxOrderAscending<T>());
 }
 
-inline unsigned int ofFindInSorted(const vector<string>& sortedValues, const string& target, bool (*compare)(string, string)) {
-    return ofFindInSorted(sortedValues, target, compare);
-}
+//inline unsigned int ofFindInSorted(const vector<string>& sortedValues, const string& target, bool (*compare)(string, string)) {
+//    return ofFindInSorted(sortedValues, target, compare);
+//}
+//
+//inline unsigned int ofFindInSorted(const vector<string>& sortedValues, const string& target) {
+//    return ofFindInSorted(sortedValues, target, ofxOrderAscending<string>());
+//}
+
 
 //--------------------------------------------------------------
 // The following operations are useful for unsorted operations
