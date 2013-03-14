@@ -32,7 +32,7 @@ public:
 	ofxEnablerInterface(bool _enabled) { setEnabled(_enabled); }
 	virtual ~ofxEnablerInterface() {};
 	
-	bool isEnabled() {
+	bool isEnabled() const {
 		return bEnabled;
 	}
 	
